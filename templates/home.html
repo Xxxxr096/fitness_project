@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>GRINDZONE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon2.ico') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                    GRINDZONE
+                </a>
+                
+            </div>
+            <div class="nav-right">
+                <a href="/">Accueil</a>
+                <a href="/contact">Contact</a>
+                <a href="/login">Programmes</a>
+                <a href="/login">Connexion</a>
+                <a href="/register">Inscription</a>
+            </div>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flashes">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- HERO -->
+    <div class="hero">
+        <h1 class="brand">GRINDZONE</h1>
+        <p class="subtitle">Get your program. Get your shape.</p>
+    </div>
+
+    <!-- IMAGE FIXE CENTRÉE -->
+    <div class="image-banner">
+        <img src="{{ url_for('static', filename='img/home.png') }}" alt="Image d'accueil">
+    </div>
+    <!-- À PROPOS -->
+    <section class="about">
+        <h2 class="section-title">Notre mission</h2>
+        <p class="about-text">
+            Chez <span class="highlight">GRINDZONE</span>, nous croyons que chaque personne mérite une version plus forte, plus confiante et plus disciplinée d’elle-même.
+            Notre mission est simple : te fournir des programmes d'entraînement puissants, accessibles et efficaces, conçus pour t'aider à te dépasser.
+            Nous combinons l’expertise de coachs de haut niveau, l’intensité des vraies salles de musculation, et une approche axée sur les résultats, tout cela <span class="highlight">Gratuitement !</span>.
+        </p>
+        <p class="about-text">
+            Que tu sois débutant ou athlète confirmé, <span class="highlight">GRINDZONE</span> est ton allié pour transformer ton corps et ton mental.
+            Rejoins la zone. Gagne en puissance. Reste fidèle à ta discipline.
+        </p>
+    </section>
+
+
+    <!-- SECTION EXPLICATION -->
+    <section class="presentation">
+        <h2 class="section-title">Pourquoi choisir nos programmes ?</h2>
+        
+        <div class="features">
+
+            <div class="feature-box">
+                <img src="{{ url_for('static', filename='img/coach1.png') }}" alt="Efficacité">
+                <h3>Efficacité prouvée</h3>
+                <p>Nos programmes sont testés et validés par des coachs et des athlètes. Ils ont déjà transformé des centaines de physiques.</p>
+            </div>
+
+            <div class="feature-box">
+                <img src="{{ url_for('static', filename='img/coach3.png') }}" alt="Personnalisé">
+                <h3>Adaptés à tous les niveaux</h3>
+                <p>Débutant ou confirmé ? Tu trouveras des séances adaptées à ton rythme et tes objectifs.</p>
+            </div>
+
+            <div class="feature-box">
+                <img src="{{ url_for('static', filename='img/coach2.png') }}" alt="Intelligent">
+                <h3>Basé sur la science</h3>
+                <p>Chaque programme est conçu selon les dernières recherches en performance, récupération et nutrition.</p>
+            </div>
+
+        </div>
+
+        <p class="conclusion">🔥 Rejoins la team <span class="highlight">GRINDZONE</span> et construis ton meilleur physique dès aujourd'hui.</p>
+        <p class="mini-push">Chaque transformation commence par une décision. La tienne commence ici.</p>
+        <a href="/programmes" class="cta-btn-inline">Découvrir les programmes</a>
+
+        <div class="social-links">
+            <p>Suivez-nous sur :</p>
+            <a href="#" target="_blank"><img src="{{ url_for('static', filename='img/insta.png') }}" alt="Instagram"></a>
+            <a href="#" target="_blank"><img src="{{ url_for('static', filename='img/facebook.png') }}" alt="Facebook"></a>
+            <a href="#" target="_blank"><img src="{{ url_for('static', filename='img/youtube.png') }}" alt="YouTube"></a>
+        </div>
+        
+    </section>
+
+        
+    <!-- SIGNATURE FINALE -->
+    <footer class="signature">
+        <p>© 2025 <span class="highlight">GRINDZONE</span> — Discipline. Force. Résultats.</p>
+    </footer>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Programmes – GRINDZONE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-left">
+            <a href="/" class="nav-logo">
+                <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                GRINDZONE
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="/dashboard">Accueil</a>
+            <a href="/contact">Contact</a>
+            <a href="/programmes">Programmes</a>
+            <a href="/logout">Se déconnecter</a>
+        </div>
+    </div>
+</nav>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flashes">
+        {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<!-- SECTION PROGRAMMES -->
+<section class="program-section">
+    <h1 class="program-title">Demande de programme personnalisé</h1>
+    <p class="program-subtitle">Remplis ce formulaire pour recevoir un programme adapté à ton objectif.</p>
+    <div class="program-intro">
+        <p>Chaque corps est unique. Obtiens un programme sur mesure en quelques clics.</p>
+    </div>
+    
+
+    <form class="program-form" method="POST" action="/programmes">
+
+        <div class="form-row">
+            <input type="number" name="poids" placeholder="Poids (kg)" required>
+            <input type="number" name="taille" placeholder="Taille (cm)" required>
+            <input type="number" name="age" placeholder="Âge" required>
+        </div>
+        
+
+        <textarea name="objectif" placeholder="Décris ici tes objectifs : perte de poids, prise de masse, forme générale..." rows="5" required></textarea>
+
+        <div class="radio-group">
+            <input type="radio" id="entrainement" name="type" value="entrainement" required>
+            <label for="entrainement" class="radio-option">Programme d'entraînement</label>
+        
+            <input type="radio" id="nutrition" name="type" value="nutrition">
+            <label for="nutrition" class="radio-option">Programme de nutrition</label>
+        </div>
+        
+
+        <button type="submit" class="btn-contact">📤 Envoyer ma demande</button>
+
+    </form>
+</section>
+
+</body>
+</html>

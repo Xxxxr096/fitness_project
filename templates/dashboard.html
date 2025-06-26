@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>GRINDZONE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon2.ico') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                    GRINDZONE
+                </a>
+                
+            </div>
+            <div class="nav-right">
+                <a href="/dashboard">Accueil</a>
+                <a href="/contact">Contact</a>
+                <a href="/programmes">Programmes</a>
+                {% if current_user.is_authenticated %}
+                    <a href="/logout">Se déconnecter</a>
+                {% else %}
+                    <a href="/login">Connexion</a>
+                    <a href="/register">Inscription</a>
+                {% endif %}
+            </div>
+            
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flashes">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <!-- HERO -->
+    
+    <div class="hero">
+        {% if current_user.is_authenticated %}
+            <h1 class="brand">Bienvenue {{ current_user.prenom }} !</h1>
+            <p class="subtitle">Prêt à atteindre tes objectifs avec GRINDZONE ?</p>
+        {% else %}
+            <h1 class="brand">GRINDZONE</h1>
+            <p class="subtitle">Get your program. Get your shape.</p>
+        {% endif %}
+    </div>
+
+    <!-- IMAGE FIXE CENTRÉE -->
+    <div class="image-banner">
+        <img src="{{ url_for('static', filename='img/home.png') }}" alt="Image d'accueil">
+    </div>
+    <!-- À PROPOS -->
+    <section class="about">
+        <h2 class="section-title">Notre mission</h2>
+        <p class="about-text">
+            Chez <span class="highlight">GRINDZONE</span>, nous croyons que chaque personne mérite une version plus forte, plus confiante et plus disciplinée d’elle-même.
+            Notre mission est simple : te fournir des programmes d'entraînement puissants, accessibles et efficaces, conçus pour t'aider à te dépasser.
+            Nous combinons l’expertise de coachs de haut niveau, l’intensité des vraies salles de musculation, et une approche axée sur les résultats, tout cela <span class="highlight">Gratuitement !</span>.
+        </p>
+        <p class="about-text">
+            Que tu sois débutant ou athlète confirmé, <span class="highlight">GRINDZONE</span> est ton allié pour transformer ton corps et ton mental.
+            Rejoins la zone. Gagne en puissance. Reste fidèle à ta discipline.
+        </p>
+    </section>
+
+
+    <section class="dashboard-programs">
+        <h2 class="section-title">Ton espace personnel</h2>
+        <p class="dashboard-intro">
+            Bienvenue dans ton tableau de bord. Accède à tes programmes personnalisés conçus par nos coachs GRINDZONE.
+        </p>
+    
+        <div class="program-options">
+            <!-- Entraînement -->
+            <div class="program-box">
+                <img src="{{ url_for('static', filename='img/programm.png') }}" alt="Programme d'entraînement">
+                <h3>Programme d'entraînement</h3>
+                <p>Un plan musculation complet adapté à ton niveau, tes objectifs et ta fréquence d'entraînement.</p>
+                <a href="/programmes" class="btn-contact">Obtenir mon programme</a>
+            </div>
+    
+            <!-- Nutrition -->
+            <div class="program-box">
+                <img src="{{ url_for('static', filename='img/programm2.png') }}" alt="Programme nutrition">
+                <h3>Programme nutrition</h3>
+                <p>Un plan alimentaire équilibré, optimisé pour tes performances et ta récupération.</p>
+                <a href="/programmes" class="btn-contact">Obtenir mon programme</a>
+            </div>
+        </div>
+
+    </section>
+    
+
+        
+    <!-- SIGNATURE FINALE -->
+    <footer class="signature">
+        <p>© 2025 <span class="highlight">GRINDZONE</span> — Discipline. Force. Résultats.</p>
+    </footer>
+
+</body>
+</html>

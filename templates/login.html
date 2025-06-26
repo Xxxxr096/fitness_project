@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion – GRINDZONE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                    GRINDZONE
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/">Accueil</a>
+                <a href="/contact">Contact</a>
+                <a href="/programmes">Programmes</a>
+                <a href="/contact">Contact</a>
+                <a href="/login">Connexion</a>
+                <a href="/register">Inscription</a>
+            </div>
+        </div>
+    </nav>
+  
+    <!-- CONNEXION SECTION -->
+    <section class="login-section">
+        <h1 class="login-title">Connexion</h1>
+        <p class="login-subtitle">Connecte-toi pour accéder à ton espace personnel.</p>
+        <p class="login-quote">
+            🔒 Bienvenue dans ta zone de transformation.<br>
+            Discipline. Force. Résultats. C’est ici que ça commence.
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+
+        <form class="login-form" method="POST" action="/login">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <button type="submit" class="btn-contact">Se connecter</button>
+            <div class="login-links">
+                <a href="/forgot-password">Mot de passe oublié ?</a> ·
+                <a href="/register">Créer un compte</a>
+            </div>
+            
+        </form>
+        <p class="login-motto">“Ne te contente pas d'essayer. Transforme-toi.”</p>
+
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription – GRINDZONE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/" class="nav-logo">
+                    <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                    GRINDZONE
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/">Accueil</a>
+                <a href="/programmes">Programmes</a>
+                <a href="/contact">Contact</a>
+                <a href="/login">Connexion</a>
+                <a href="/register">Inscription</a>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <!-- INSCRIPTION -->
+    <section class="register-section">
+        <h1 class="register-title">Créer un compte</h1>
+        <p class="register-subtitle">
+            Prêt à te transformer ? Commence ton parcours avec <span class="highlight">GRINDZONE</span>.
+        </p>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form class="register-form" method="POST" action="/register">
+            <div class="form-row">
+                <input type="text" name="prenom" placeholder="Prénom" required>
+                <input type="text" name="nom" placeholder="Nom" required>
+            </div>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <input type="password" name="confirm" placeholder="Confirmer le mot de passe" required>
+            <button type="submit" class="btn-contact">S’inscrire</button>
+            <p class="login-link">
+                Déjà inscrit ? <a href="/login">Connecte-toi ici</a>
+            </p>
+            
+        </form>
+
+        <p class="register-quote">“Tu ne changes pas en regardant, tu changes en agissant.”</p>
+    </section>
+
+</body>
+</html>
