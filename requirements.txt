@@ -352,3 +352,5 @@ yarl==1.16.0
 yfinance==0.2.62
 yolo==0.3.2
 zipp==3.21.0
+flask
+sqlalchemy
