@@ -36,7 +36,7 @@
     
 
     <form class="program-form" method="POST" action="/programmes">
-
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-row">
             <input type="number" name="poids" placeholder="Poids (kg)" required>
             <input type="number" name="taille" placeholder="Taille (cm)" required>

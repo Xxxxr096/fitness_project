@@ -39,6 +39,7 @@
         <p class="contact-subtitle">Une question ? Un avis ? Un partenariat ? Écris-nous, nous te répondrons rapidement.</p>
 
         <form class="contact-form" method="POST" action="/contact">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-row">
                 <input type="text" name="prenom" placeholder="Prénom" required>
                 <input type="text" name="nom" placeholder="Nom" required>

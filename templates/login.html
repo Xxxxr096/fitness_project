@@ -48,6 +48,7 @@
         
 
         <form class="login-form" method="POST" action="/login">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Mot de passe" required>
             <button type="submit" class="btn-contact">Se connecter</button>

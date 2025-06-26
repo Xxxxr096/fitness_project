@@ -1032,3 +1032,13 @@ body {
     font-size: 16px;
     color: #999;
 }
+
+.mes-demandes h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #FFD700;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+    letter-spacing: 0.5px;
+}

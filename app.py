@@ -13,9 +13,16 @@ import smtplib
 from email.mime.text import MIMEText
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timedelta
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.utils import secure_filename
+import re
+import logging
+from logging.handlers import RotatingFileHandler
+from flask_wtf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import generate_csrf
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -24,14 +31,53 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"sqlite:///{os.path.join(basedir, 'database.db')}"
 )
-app.config["SECRET_KEY"] = "1234 "
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024  # 2MB max upload
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+# app.config["SESSION_COOKIE_SECURE"] = True  # only works with HTTPS
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.permanent_session_lifetime = timedelta(minutes=30)
 
 db = SQLAlchemy(app)
 bycrypt = Bcrypt(app)
 
+if not os.path.exists("logs"):
+    os.mkdir("logs")
+file_handler = RotatingFileHandler("logs/app.log", maxBytes=10240, backupCount=5)
+file_handler.setLevel(logging.WARNING)
+app.logger.addHandler(file_handler)
+
+csrf = CSRFProtect(app)
+
+
+UPLOAD_FOLDER = os.path.join(basedir, "static/uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+
+ALLOWED_EXTENSIONS = {"pdf"}
+
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+# Secure headers
+@app.after_request
+def add_security_headers(response):
+    response.headers["Content-Security-Policy"] = "default-src 'self'"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+limiter = Limiter(
+    get_remote_address, app=app, default_limits=["200 per day", "50 per hour"]
+)
 
 
 class User(db.Model, UserMixin):
@@ -41,6 +87,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    confirmed = db.Column(db.Boolean, default=False)
 
 
 class ProgrammeDemande(db.Model):
@@ -124,6 +171,9 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
         confirm = request.form["confirm"]
+        if not is_valid_email(email):
+            flash("Adresse email invalide.", "error")
+            return redirect(url_for("register"))
         if password != confirm:
             flash("Les mots de passe ne correspondent pas.")
             return redirect(url_for("register"))
@@ -134,9 +184,62 @@ def register():
         new_user = User(prenom=prenom, nom=nom, email=email, password=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-        flash("Compte crée avec succés. Connecte-toi !")
+        token = generate_confirmation_token(email)
+        confirm_url = url_for("confirm_email", token=token, _external=True)
+
+        message = MIMEText(
+            f"""
+        Bienvenue sur GRINDZONE 💪,
+
+        Clique ici pour confirmer ton adresse email :
+        {confirm_url}
+
+        Ce lien expire dans 1h.
+
+        L'équipe GRINDZONE
+        """
+        )
+        message["Subject"] = "Confirmation de ton compte – GRINDZONE"
+        message["From"] = os.getenv("MAIL_USERNAME")
+        message["To"] = email
+
+        try:
+            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+                smtp.starttls()
+                smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+                smtp.send_message(message)
+        except Exception as e:
+            flash("Erreur lors de l'envoi de l'email de confirmation", "error")
+
+        flash(
+            "Ton compte a bien été créé ! Un email de confirmation t’a été envoyé. Clique sur le lien pour activer ton compte.",
+            "success",
+        )
         return redirect(url_for("login"))
     return render_template("register.html")
+
+
+@app.route("/confirm/<token>")
+def confirm_email(token):
+    email = confirm_token(token)
+
+    if not email:
+        flash("Lien invalide ou expiré.", "error")
+        return redirect(url_for("login"))
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("Utilisateur introuvable.", "error")
+        return redirect(url_for("login"))
+
+    if user.confirmed:
+        flash("Ton compte est déjà confirmé.", "info")
+    else:
+        user.confirmed = True
+        db.session.commit()
+        flash("Ton compte a été confirmé avec succès.", "success")
+
+    return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -232,10 +335,14 @@ def admin():
     )
 
 
+@limiter.limit("5 per minute")
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
         email = request.form["email"]
+        if not is_valid_email(email):
+            flash("Adresse email invalide.", "error")
+            return redirect(url_for("forgot_password"))
         user = User.query.filter_by(email=email).first()
         if user:
             token = generate_reset_token(user.email)
@@ -330,5 +437,28 @@ def repondre(id):
     return render_template("admin_repondre.html", demande=demande)
 
 
+def is_valid_email(email):
+    return re.match(r"[^@]+@[^@]+\.[^@]+", email)
+
+
+def generate_confirmation_token(email):
+    s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    return s.dumps(email, salt="confirm-email")
+
+
+def confirm_token(token, expiration=3600):
+    s = URLSafeTimedSerializer(app.config["SECRET_KEY"])
+    try:
+        email = s.loads(token, salt="confirm-email", max_age=expiration)
+    except:
+        return None
+    return email
+
+
+@app.context_processor
+def inject_csrf_token():
+    return dict(csrf_token=generate_csrf)
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
