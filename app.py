@@ -411,7 +411,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
-# ✅ Route pour l'admin qui envoie le programme PDF
 @app.route("/admin/repondre/<int:id>", methods=["GET", "POST"])
 @login_required
 def repondre(id):
