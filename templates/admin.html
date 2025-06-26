@@ -2,31 +2,83 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Admin – GRINDZONE</title>
+    <title>Admin Panel – GRINDZONE</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon2.ico') }}">
 </head>
 <body>
-    <h1 style="text-align:center; color:#FFD700;">Demandes reçues</h1>
-    <a href="{{ url_for('admin_logout') }}" style="color:red; text-align:center; display:block;">Se déconnecter</a>
 
-    <table style="margin: 40px auto; width: 90%; color: #fff; border-collapse: collapse;">
-        <thead>
-            <tr style="background-color: #FFD700; color: #121212;">
-                <th>Date</th><th>Poids</th><th>Taille</th><th>Âge</th><th>Type</th><th>Objectif</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for d in demandes %}
-            <tr style="border-bottom: 1px solid #333;">
-                <td>{{ d.date }}</td>
-                <td>{{ d.poids }} kg</td>
-                <td>{{ d.taille }} cm</td>
-                <td>{{ d.age }}</td>
-                <td>{{ d.type }}</td>
-                <td>{{ d.objectif }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <!-- NAVBAR ADMIN -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="/admin" class="nav-logo">
+                    <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                    GRINDZONE Admin
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="/logout">Se déconnecter</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ADMIN HEADER -->
+    <section class="admin-header">
+        <h1>Panneau d'administration</h1>
+        <p class="admin-subtitle">Bienvenue dans la zone de gestion. Surveille l'activité, réponds aux demandes, gère les utilisateurs.</p>
+    </section>
+
+    <!-- STATISTIQUES RAPIDES -->
+    <section class="admin-stats">
+        <div class="stat-box">
+            <h3>Utilisateurs inscrits</h3>
+            <p>{{ total_users }}</p>
+        </div>
+        <div class="stat-box">
+            <h3>Demandes reçues</h3>
+            <p>{{ total_demandes }}</p>
+        </div>
+        <div class="stat-box">
+            <h3>Messages contact</h3>
+            <p>{{ total_contacts }}</p>
+        </div>
+    </section>
+
+    <!-- DEMANDES UTILISATEURS -->
+    <section class="admin-demandes">
+        <h2>Demandes de programmes</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Objectif</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for demande in demandes %}
+                <tr>
+                    <td>{{ demande.user.nom }}</td>
+                    <td>{{ demande.user.email }}</td>
+                    <td>{{ demande.objectif }}</td>
+                    <td>{{ demande.type }}</td>
+                    <td>{{ demande.date }}</td>
+                    <td><a class="btn-small" href="/admin/repondre/{{ demande.id }}">Répondre</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="signature">
+        <p>Admin GRINDZONE &copy; 2025 - Discipline. Force. Résultats.</p>
+    </footer>
+
 </body>
 </html>
+

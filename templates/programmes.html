@@ -24,15 +24,7 @@
         </div>
     </div>
 </nav>
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <div class="flashes">
-        {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-        {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
+
 
 <!-- SECTION PROGRAMMES -->
 <section class="program-section">
@@ -64,9 +56,64 @@
         
 
         <button type="submit" class="btn-contact">📤 Envoyer ma demande</button>
-
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
     </form>
 </section>
+
+<section class="mes-demandes">
+    <h2>Mes demandes précédentes</h2>
+
+    {% if demandes %}
+    <div class="table-container">
+        <table class="demande-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Objectif</th>
+                    <th>Type</th>
+                    <th>Poids</th>
+                    <th>Taille</th>
+                    <th>Âge</th>
+                    <th>Fichier</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for demande in demandes %}
+                <tr>
+                    <td>{{ demande.date.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ demande.objectif }}</td>
+                    <td>{{ demande.type }}</td>
+                    <td>{{ demande.poids }} kg</td>
+                    <td>{{ demande.taille }} cm</td>
+                    <td>{{ demande.age }} ans</td>
+                    <td>
+                        {% if demande.fichier %}
+                        <a href="{{ url_for('static', filename='uploads/' ~ demande.fichier) }}" class="download-link" download>📥</a>
+                        {% else %}
+                        <span class="info-waiting">⏳</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <p>Aucune demande enregistrée pour le moment.</p>
+    {% endif %}
+</section>
+
+<footer class="signature">
+    <p>© 2025 <span class="highlight">GRINDZONE</span> — Discipline. Force. Résultats.</p>
+</footer>
 
 </body>
 </html>

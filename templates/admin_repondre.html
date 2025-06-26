@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Répondre – GRINDZONE Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/admin" class="nav-logo">
+                <img src="{{ url_for('static', filename='img/griffure.png') }}" alt="Logo" class="logo-icon">
+                GRINDZONE Admin
+            </a>
+        </div>
+    </nav>
+
+    <section class="admin-section">
+        <h1>Répondre à la demande de {{ demande.user.prenom }} {{ demande.user.nom }}</h1>
+        <p><strong>Objectif :</strong> {{ demande.objectif }}</p>
+        <p><strong>Type :</strong> {{ demande.type }}</p>
+        <p><strong>Date :</strong> {{ demande.date.strftime('%d/%m/%Y') }}</p>
+
+        <form method="POST" enctype="multipart/form-data">
+            <label for="pdf">Joindre un fichier PDF :</label>
+            <input type="file" name="pdf" accept="application/pdf" required>
+            <button type="submit" class="btn-contact">📤 Envoyer le programme</button>
+        </form>
+
+        <br>
+        <a href="/admin" class="btn-small">⬅ Retour</a>
+    </section>
+
+</body>
+</html>

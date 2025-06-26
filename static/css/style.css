@@ -694,3 +694,341 @@ input[type=number]::-webkit-outer-spin-button {
     border: 1px solid #f1c40f;
     color: #f1c40f;
 }
+
+
+
+/* ADMIN THEME DARK MODE */
+body {
+    background-color: #111;
+    color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-header {
+    text-align: center;
+    padding: 40px 20px 20px;
+}
+
+.admin-header h1 {
+    font-size: 2.8rem;
+    color: #FFD700;
+    margin-bottom: 10px;
+}
+
+.admin-subtitle {
+    font-size: 1.1rem;
+    color: #ccc;
+}
+
+.admin-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 30px 0;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background-color: #1b1b1b;
+    border-left: 4px solid #FFD700;
+    padding: 20px;
+    border-radius: 10px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.05);
+}
+
+.stat-box h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.stat-box p {
+    font-size: 2rem;
+    color: #FFD700;
+    margin: 0;
+}
+
+.admin-demandes {
+    padding: 40px 10%;
+}
+
+.admin-demandes h2 {
+    color: #FFD700;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1b1b1b;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: #222;
+    color: #FFD700;
+}
+
+.admin-table td {
+    color: #f5f5f5;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background-color: #FFD700;
+    color: #111;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-small:hover {
+    background-color: #e6c200;
+}
+
+.signature {
+    text-align: center;
+    padding: 30px 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+
+
+/* Style pour pages forgot_password et reset_password */
+.auth-container {
+    max-width: 450px;
+    margin: 80px auto;
+    background-color: #1c1c1c;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+    text-align: center;
+}
+
+.auth-container h1 {
+    color: #FFD700;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.auth-container .subtitle {
+    color: #ccc;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+.auth-container input[type="email"],
+.auth-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+.auth-container .btn-contact {
+    width: 100%;
+    background-color: #FFD700;
+    color: #111;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-container .btn-contact:hover {
+    background-color: #e6c200;
+}
+
+.flashes {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.flash-message {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.flash-message.success {
+    background-color: #1c1c1c;
+    border: 1px solid #4caf50;
+    color: #4caf50;
+}
+
+.flash-message.error {
+    background-color: #1c1c1c;
+    border: 1px solid #ff4c4c;
+    color: #ff4c4c;
+}
+
+.user-space {
+    max-width: 700px;
+    margin: 60px auto;
+    color: #f0f0f0;
+    text-align: center;
+}
+
+.demandes-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+.demandes-list li {
+    background-color: #1c1c1c;
+    border: 1px solid #333;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-align: left;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.05);
+}
+
+
+/* Style pour la page de réponse admin */
+.admin-section {
+    max-width: 700px;
+    margin: 60px auto;
+    background-color: #1b1b1b;
+    padding: 40px;
+    border-radius: 10px;
+    color: #f0f0f0;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.08);
+}
+
+.admin-section h1 {
+    color: #FFD700;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.admin-section p {
+    margin: 8px 0;
+    color: #ccc;
+    font-size: 15px;
+}
+
+.admin-section label {
+    display: block;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #f5f5f5;
+}
+
+.admin-section input[type="file"] {
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 10px;
+    width: 100%;
+}
+
+.btn-contact {
+    padding: 12px;
+    background-color: #FFD700;
+    color: #111;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.btn-contact:hover {
+    background-color: #e6c200;
+}
+
+.btn-small {
+    display: inline-block;
+    padding: 10px 18px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-small:hover {
+    background-color: #444;
+}
+
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.demande-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1b1b1b;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.demande-table th,
+.demande-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #2b2b2b;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.demande-table thead {
+    background-color: #111;
+}
+
+.demande-table th {
+    color: #FFD700;
+    font-weight: 600;
+}
+
+.download-link {
+    background-color: #FFD700;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #111;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.download-link:hover {
+    background-color: #e6c200;
+}
+
+.info-waiting {
+    font-size: 16px;
+    color: #999;
+}
