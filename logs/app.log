@@ -1,0 +1,88 @@
+Exception on /admin [GET]
+Traceback (most recent call last):
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "/Users/aminechabane/Desktop/flask_app_entrainement/app.py", line 315, in admin
+    abort(403)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/helpers.py", line 284, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.Forbidden: 403 Forbidden: You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "/Users/aminechabane/Desktop/flask_app_entrainement/app.py", line 406, in forbidden
+    return render_template("403.html"), 403
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 1084, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 1013, in get_template
+    return self._load_template(name, globals)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 972, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: 403.html
+Exception on /admin [GET]
+Traceback (most recent call last):
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask_login/utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+  File "/Users/aminechabane/Desktop/flask_app_entrainement/app.py", line 315, in admin
+    abort(403)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/helpers.py", line 284, in abort
+    current_app.aborter(code, *args, **kwargs)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/werkzeug/exceptions.py", line 876, in __call__
+    raise self.mapping[code](*args, **kwargs)
+werkzeug.exceptions.Forbidden: 403 Forbidden: You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "/Users/aminechabane/Desktop/flask_app_entrainement/app.py", line 406, in forbidden
+    return render_template("403.html"), 403
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 1084, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 1013, in get_template
+    return self._load_template(name, globals)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/environment.py", line 972, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "/Users/aminechabane/.pyenv/versions/3.10.13/lib/python3.10/site-packages/flask/templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: 403.html
