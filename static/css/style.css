@@ -1046,35 +1046,38 @@ body {
 
   
 /* === Responsive Mobile Styles === */
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #FFD700;
+    z-index: 1001;
+    position: relative;
+}
+
 @media (max-width: 768px) {
-    .nav-container {
-        flex-direction: column;
-        align-items: flex-start;
+    .menu-toggle {
+        display: block;
+        
     }
 
     .nav-right {
+        display: none;
         flex-direction: column;
-        gap: 10px;
+        background-color: #1a1a1a;
+        position: absolute;
+        top: 60px;
+        left: 0;
         width: 100%;
-        margin-top: 10px;
+        z-index: 1000;
     }
 
-    .brand {
-        font-size: 36px;
+    .nav-right.show {
+        display: flex;
     }
 
-    .hero {
-        padding: 100px 15px 20px;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .container, .content, .dashboard, .form-box {
-        padding: 15px;
-        width: 100%;
-        box-sizing: border-box;
+    .nav-right a {
+        padding: 12px 16px;
+        border-top: 1px solid #333;
     }
 }

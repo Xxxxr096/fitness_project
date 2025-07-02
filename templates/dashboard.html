@@ -21,7 +21,8 @@
                 </a>
                 
             </div>
-            <div class="nav-right">
+            <div class="menu-toggle" id="mobile-menu">&#9776;</div>
+            <div class="nav-right" id="nav-links">
                 <a href="/dashboard">Accueil</a>
                 <a href="/contact">Contact</a>
                 <a href="/programmes">Programmes</a>
@@ -108,5 +109,9 @@
         <p>© 2025 <span class="highlight">GRINDZONE</span> — Discipline. Force. Résultats.</p>
     </footer>
 
+    <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+
+        
+      
 </body>
 </html>
