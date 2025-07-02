@@ -1042,3 +1042,16 @@ body {
     text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
     letter-spacing: 0.5px;
 }
+
+
+@media (max-width: 768px) {
+    body {
+      font-size: 1rem;
+    }
+  
+    .container {
+      padding: 10px;
+      flex-direction: column;
+    }
+  }
+  
