@@ -23,6 +23,8 @@ from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import generate_csrf
+import cloudinary
+import cloudinary.uploader
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -30,11 +32,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
-
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 # app.config["SESSION_COOKIE_SECURE"] = True  # only works with HTTPS
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -424,14 +430,19 @@ def repondre(id):
     if request.method == "POST":
         fichier = request.files.get("pdf")
         if fichier and fichier.filename.endswith(".pdf"):
-            filename = secure_filename(f"{demande.user.nom}_{demande.id}.pdf")
-            filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-            fichier.save(filepath)
-
-            demande.fichier = filename
-            db.session.commit()
-            flash("Programme envoyé avec succès.", "success")
-            return redirect(url_for("admin"))
+            try:
+                result = cloudinary.uploader.upload(
+                    fichier,
+                    resource_type="raw",  # type important pour PDF
+                    folder="grindzone_programmes",
+                )
+                demande.fichier = result["secure_url"]
+                db.session.commit()
+                flash("Programme envoyé avec succès.", "success")
+                return redirect(url_for("admin"))
+            except Exception as e:
+                print("Cloudinary error:", e)
+                flash("Erreur lors de l'envoi vers Cloudinary.", "error")
         else:
             flash("Seuls les fichiers PDF sont autorisés.", "error")
 

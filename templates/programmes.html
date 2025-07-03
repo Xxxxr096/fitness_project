@@ -101,7 +101,7 @@
                     <td>{{ demande.age }} ans</td>
                     <td>
                         {% if demande.fichier %}
-                        <a href="{{ url_for('static', filename='uploads/' ~ demande.fichier) }}" class="download-link" download>📥</a>
+                        <a href="{{ demande.fichier }}" class="download-link" download>📥</a>
                         {% else %}
                         <span class="info-waiting">⏳</span>
                         {% endif %}
