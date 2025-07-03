@@ -459,17 +459,20 @@ def repondre(id):
         fichier = request.files.get("pdf")
         if fichier and fichier.filename.endswith(".pdf"):
             try:
+                # Nettoyage du nom de fichier
                 nom_client = demande.user.nom.replace(" ", "_").lower()
                 programme_type = demande.type.replace(" ", "_").lower()
                 filename = secure_filename(
                     f"{programme_type}_{nom_client}{demande.id}.pdf"
                 )
-                public_id = filename.rsplit(".", 1)[0]
+
+                # ✅ Important : on garde l’extension .pdf dans le public_id
+                public_id = filename
 
                 # Upload vers Cloudinary
                 result = cloudinary.uploader.upload(
                     fichier,
-                    resource_type="raw",
+                    resource_type="raw",  # ✅ obligatoire pour les PDF
                     folder="grindzone_programmes",
                     use_filename=True,
                     public_id=public_id,
@@ -477,15 +480,17 @@ def repondre(id):
                     overwrite=True,
                 )
 
-                # 🔧 Corriger ici l'URL pour forcer le téléchargement
+                # ✅ Force le téléchargement via fl_attachment
                 download_url = result["secure_url"].replace(
                     "/upload/", "/upload/fl_attachment/"
                 )
 
+                # Enregistrer l’URL dans la base
                 demande.fichier = download_url
                 db.session.commit()
                 flash("Programme envoyé avec succès.", "success")
                 return redirect(url_for("admin"))
+
             except Exception as e:
                 print("Cloudinary error:", e)
                 flash("Erreur lors de l'envoi vers Cloudinary.", "error")
