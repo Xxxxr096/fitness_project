@@ -33,7 +33,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024  # 2MB max upload
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
+
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 # app.config["SESSION_COOKIE_SECURE"] = True  # only works with HTTPS
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
