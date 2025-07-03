@@ -449,10 +449,15 @@ def repondre(id):
                     use_filename=True,
                     public_id=public_id,
                     unique_filename=False,
+                    overwrite=True,
+                    context={"mime": "application/pdf"},
                 )
 
                 # Ajoute paramètre pour forcer le téléchargement
-                download_url = result["secure_url"] + "?fl_attachment=true"
+                download_url = result["secure_url"].replace(
+                    "/upload/", "/upload/fl_attachment/"
+                )
+
                 demande.fichier = download_url
                 db.session.commit()
                 flash("Programme envoyé avec succès.", "success")

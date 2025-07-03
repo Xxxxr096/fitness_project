@@ -101,10 +101,12 @@
                     <td>{{ demande.age }} ans</td>
                     <td>
                         {% if demande.fichier %}
-                        <a href="{{ demande.fichier }}" download class="download-link">📥</a>
+                            <a href="{{ demande.fichier }}" target="_blank" class="btn-open">👁️ Voir</a>
+                            <a href="{{ demande.fichier }}" download class="btn-download">📥 Télécharger</a>
                         {% else %}
-                        <span class="info-waiting">⏳</span>
+                            <span class="info-waiting">⏳</span>
                         {% endif %}
+
                     </td>
                 </tr>
                 {% endfor %}
