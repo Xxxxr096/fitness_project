@@ -101,8 +101,8 @@
                     <td>{{ demande.age }} ans</td>
                     <td>
                         {% if demande.fichier %}
-                            <a href="{{ demande.fichier }}" target="_blank" class="btn-open">👁️ Voir</a>
-                            <a href="{{ demande.fichier }}" download class="btn-download">📥 Télécharger</a>
+                            <a href="{{ url_for('telecharger_programme', demande_id=demande.id) }}" class="btn-download">📥 Télécharger</a>
+
                         {% else %}
                             <span class="info-waiting">⏳</span>
                         {% endif %}

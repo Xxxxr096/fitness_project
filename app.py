@@ -315,6 +315,32 @@ def programmes():
     return render_template("programmes.html", demandes=demandes)
 
 
+from flask import send_file, Response, redirect
+
+
+@app.route("/telecharger-programme/<int:demande_id>")
+@login_required
+def telecharger_programme(demande_id):
+    demande = ProgrammeDemande.query.get_or_404(demande_id)
+
+    if demande.user_id != current_user.id and not current_user.is_admin:
+        abort(403)
+
+    if not demande.fichier:
+        flash("Aucun fichier disponible pour cette demande.", "error")
+        return redirect(url_for("programmes"))
+
+    # Construction d’un nom de fichier propre
+    nom_client = current_user.nom.replace(" ", "_").lower()
+    programme_type = demande.type.replace(" ", "_").lower()
+    nom_fichier = f"{programme_type}_{nom_client}_{demande.id}.pdf"
+
+    # Redirection vers l’URL Cloudinary avec nom forcé
+    url_pdf = f"{demande.fichier}&response-content-disposition=attachment;filename={nom_fichier}"
+
+    return redirect(url_pdf)
+
+
 # ----------- ADMIN ------------ #
 @app.route("/admin")
 @login_required
