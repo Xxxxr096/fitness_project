@@ -101,8 +101,7 @@
                     <td>{{ demande.age }} ans</td>
                     <td>
                         {% if demande.fichier %}
-                        <a href="{{ demande.fichier }}" target="_blank" class="download-link">📥</a>
-
+                        <a href="{{ demande.fichier }}" download class="download-link">📥</a>
                         {% else %}
                         <span class="info-waiting">⏳</span>
                         {% endif %}

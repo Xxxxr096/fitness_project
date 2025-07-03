@@ -418,6 +418,8 @@ UPLOAD_FOLDER = os.path.join(basedir, "static/uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+from urllib.parse import urlencode
+
 
 @app.route("/admin/repondre/<int:id>", methods=["GET", "POST"])
 @login_required
@@ -433,13 +435,14 @@ def repondre(id):
             try:
                 result = cloudinary.uploader.upload(
                     fichier,
-                    resource_type="raw",  # Important pour les fichiers non-images
+                    resource_type="raw",  # PDF = raw
                     folder="grindzone_programmes",
                     use_filename=True,
                     unique_filename=False,
                 )
-                # Lien avec ?fl_attachment=true pour forcer le téléchargement
-                download_url = result["secure_url"] + "?fl_attachment=true"
+                base_url = result["secure_url"]
+                # Ajouter le paramètre pour forcer le téléchargement
+                download_url = f"{base_url}?{urlencode({'fl_attachment': 'true'})}"
 
                 demande.fichier = download_url
                 db.session.commit()
