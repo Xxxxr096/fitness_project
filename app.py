@@ -452,10 +452,7 @@ def repondre(id):
                 )
 
                 # Ajoute paramètre pour forcer le téléchargement
-                download_url = (
-                    result["secure_url"].split(".pdf")[0] + ".pdf?fl_attachment=true"
-                )
-
+                download_url = result["secure_url"] + "?fl_attachment=true"
                 demande.fichier = download_url
                 db.session.commit()
                 flash("Programme envoyé avec succès.", "success")
