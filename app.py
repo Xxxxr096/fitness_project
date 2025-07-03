@@ -439,7 +439,8 @@ def repondre(id):
                     unique_filename=False,
                     flags="attachment",
                 )
-                demande.fichier = result["secure_url"]
+                download_url = result["secure_url"] + "?fl_attachment=true"
+                demande.fichier = download_url
                 db.session.commit()
                 flash("Programme envoyé avec succès.", "success")
                 return redirect(url_for("admin"))
