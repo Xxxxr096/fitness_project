@@ -457,35 +457,29 @@ def repondre(id):
 
     if request.method == "POST":
         fichier = request.files.get("pdf")
-
         if fichier and fichier.filename.endswith(".pdf"):
             try:
                 nom_client = demande.user.nom.replace(" ", "_").lower()
                 programme_type = demande.type.replace(" ", "_").lower()
                 filename = secure_filename(
-                    f"{programme_type}_{nom_client}_{demande.id}.pdf"
+                    f"{programme_type}_{nom_client}{demande.id}.pdf"
                 )
                 public_id = filename.rsplit(".", 1)[0]
 
-                # Upload vers Cloudinary en RAW et avec metadata
+                # Upload vers Cloudinary
                 result = cloudinary.uploader.upload(
                     fichier,
                     resource_type="raw",
                     folder="grindzone_programmes",
-                    public_id=public_id,
                     use_filename=True,
+                    public_id=public_id,
                     unique_filename=False,
                     overwrite=True,
-                    format="pdf",  # Ajouté pour s'assurer de l'extension
-                    context={"alt": "Programme GRINDZONE", "mime": "application/pdf"},
                 )
 
-                # Création d’une URL avec `fl_attachment` + nom de fichier
+                # 🔧 Corriger ici l'URL pour forcer le téléchargement
                 download_url = result["secure_url"].replace(
                     "/upload/", "/upload/fl_attachment/"
-                )
-                download_url += (
-                    f"&response-content-disposition=attachment;filename={filename}"
                 )
 
                 demande.fichier = download_url
