@@ -433,13 +433,14 @@ def repondre(id):
             try:
                 result = cloudinary.uploader.upload(
                     fichier,
-                    resource_type="raw",  # type important pour PDF
+                    resource_type="raw",  # Important pour les fichiers non-images
                     folder="grindzone_programmes",
                     use_filename=True,
                     unique_filename=False,
-                    flags="attachment",
                 )
+                # Lien avec ?fl_attachment=true pour forcer le téléchargement
                 download_url = result["secure_url"] + "?fl_attachment=true"
+
                 demande.fichier = download_url
                 db.session.commit()
                 flash("Programme envoyé avec succès.", "success")
