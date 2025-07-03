@@ -435,6 +435,9 @@ def repondre(id):
                     fichier,
                     resource_type="raw",  # type important pour PDF
                     folder="grindzone_programmes",
+                    use_filename=True,
+                    unique_filename=False,
+                    flags="attachment",
                 )
                 demande.fichier = result["secure_url"]
                 db.session.commit()
