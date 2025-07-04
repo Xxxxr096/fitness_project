@@ -471,7 +471,9 @@ def repondre(id):
                     flash("Programme envoyé avec succès.", "success")
                     return redirect(url_for("admin"))
                 else:
-                    flash("Échec de l'envoi vers Supabase.", "error")
+                    print("📛 ERREUR SUPABASE :", response.status_code, response.text)
+                    flash(f"Erreur Supabase : {response.status_code}", "error")
+
             except Exception as e:
                 print("Erreur Supabase:", e)
                 flash("Erreur serveur interne.", "error")
