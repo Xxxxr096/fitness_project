@@ -330,7 +330,6 @@ def telecharger_programme(demande_id):
         flash("Aucun fichier disponible pour cette demande.", "error")
         return redirect(url_for("programmes"))
 
-    # Construction d’un nom de fichier propre
     return redirect(demande.fichier)
 
 
@@ -453,34 +452,33 @@ def repondre(id):
         if fichier and fichier.filename.endswith(".pdf"):
             try:
                 # Nettoyage du nom de fichier
+                # ✅ Nettoyer et forcer l’extension .pdf dans le nom
                 nom_client = demande.user.nom.replace(" ", "_").lower()
                 programme_type = demande.type.replace(" ", "_").lower()
                 filename = secure_filename(
-                    f"{programme_type}_{nom_client}{demande.id}.pdf"
+                    f"{programme_type}_{nom_client}_{demande.id}.pdf"
                 )
+                public_id = f"grindzone_programmes/{filename[:-4]}"  # sans le .pdf ici
 
-                # ✅ Important : on garde l’extension .pdf dans le public_id
-                public_id = filename
-
-                # Upload vers Cloudinary
+                # ✅ Upload vers Cloudinary
                 result = cloudinary.uploader.upload(
                     fichier,
-                    resource_type="raw",  # ✅ obligatoire pour les PDF
-                    folder="grindzone_programmes",
-                    use_filename=True,
+                    resource_type="raw",
+                    folder=None,  # car dossier déjà dans public_id
                     public_id=public_id,
+                    use_filename=True,
                     unique_filename=False,
                     overwrite=True,
                 )
 
-                # ✅ Force le téléchargement via fl_attachment
+                # ✅ Récupérer l'URL et forcer nom pour téléchargement
                 download_url = result["secure_url"].replace(
-                    "/upload/", f"/upload/fl_attachment:{public_id}/"
+                    "/upload/", f"/upload/fl_attachment/"
                 )
 
-                # Enregistrer l’URL dans la base
                 demande.fichier = download_url
                 db.session.commit()
+
                 flash("Programme envoyé avec succès.", "success")
                 return redirect(url_for("admin"))
 
