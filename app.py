@@ -331,14 +331,7 @@ def telecharger_programme(demande_id):
         return redirect(url_for("programmes"))
 
     # Construction d’un nom de fichier propre
-    nom_client = current_user.nom.replace(" ", "_").lower()
-    programme_type = demande.type.replace(" ", "_").lower()
-    nom_fichier = f"{programme_type}_{nom_client}_{demande.id}.pdf"
-
-    # Redirection vers l’URL Cloudinary avec nom forcé
-    url_pdf = f"{demande.fichier}&response-content-disposition=attachment;filename={nom_fichier}"
-
-    return redirect(url_pdf)
+    return redirect(demande.fichier)
 
 
 # ----------- ADMIN ------------ #
@@ -482,7 +475,7 @@ def repondre(id):
 
                 # ✅ Force le téléchargement via fl_attachment
                 download_url = result["secure_url"].replace(
-                    "/upload/", "/upload/fl_attachment/"
+                    "/upload/", f"/upload/fl_attachment:{public_id}/"
                 )
 
                 # Enregistrer l’URL dans la base
