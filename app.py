@@ -8,6 +8,7 @@ from flask_login import (
     login_required,
     current_user,
 )
+import requests
 from flask_bcrypt import Bcrypt
 import smtplib
 from email.mime.text import MIMEText
@@ -23,8 +24,7 @@ from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import generate_csrf
-import cloudinary
-import cloudinary.uploader
+
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -32,11 +32,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-)
 
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -315,9 +310,6 @@ def programmes():
     return render_template("programmes.html", demandes=demandes)
 
 
-from flask import send_file, Response, redirect
-
-
 @app.route("/telecharger-programme/<int:demande_id>")
 @login_required
 def telecharger_programme(demande_id):
@@ -327,8 +319,8 @@ def telecharger_programme(demande_id):
         abort(403)
 
     if not demande.fichier:
-        flash("Aucun fichier disponible pour cette demande.", "error")
-        return redirect(url_for("programmes"))
+        flash("Aucun fichier disponible.", "error")
+        return redirect(url_for("dashboard"))
 
     return redirect(demande.fichier)
 
@@ -451,42 +443,40 @@ def repondre(id):
         fichier = request.files.get("pdf")
         if fichier and fichier.filename.endswith(".pdf"):
             try:
-                # Nettoyage du nom de fichier
-                # ✅ Nettoyer et forcer l’extension .pdf dans le nom
                 nom_client = demande.user.nom.replace(" ", "_").lower()
-                programme_type = demande.type.replace(" ", "_").lower()
-                filename = secure_filename(
-                    f"{programme_type}_{nom_client}_{demande.id}.pdf"
-                )
-                public_id = f"grindzone_programmes/{filename[:-4]}"  # sans le .pdf ici
+                type_prog = demande.type.replace(" ", "_").lower()
+                filename = secure_filename(f"{type_prog}_{nom_client}_{demande.id}.pdf")
 
-                # ✅ Upload vers Cloudinary
-                result = cloudinary.uploader.upload(
-                    fichier,
-                    resource_type="raw",
-                    folder=None,  # car dossier déjà dans public_id
-                    public_id=public_id,
-                    use_filename=True,
-                    unique_filename=False,
-                    overwrite=True,
-                )
+                supabase_url = os.getenv("SUPABASE_URL")
+                supabase_key = os.getenv("SUPABASE_KEY")
+                bucket = os.getenv("SUPABASE_BUCKET")
 
-                # ✅ Récupérer l'URL et forcer nom pour téléchargement
-                download_url = result["secure_url"].replace(
-                    "/upload/", f"/upload/fl_attachment/"
+                upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{filename}"
+                headers = {
+                    "apikey": supabase_key,
+                    "Authorization": f"Bearer {supabase_key}",
+                    "Content-Type": "application/pdf",
+                }
+
+                response = requests.put(
+                    upload_url, data=fichier.read(), headers=headers
                 )
 
-                demande.fichier = download_url
-                db.session.commit()
-
-                flash("Programme envoyé avec succès.", "success")
-                return redirect(url_for("admin"))
-
+                if response.status_code == 200:
+                    public_url = (
+                        f"{supabase_url}/storage/v1/object/public/{bucket}/{filename}"
+                    )
+                    demande.fichier = public_url
+                    db.session.commit()
+                    flash("Programme envoyé avec succès.", "success")
+                    return redirect(url_for("admin"))
+                else:
+                    flash("Échec de l'envoi vers Supabase.", "error")
             except Exception as e:
-                print("Cloudinary error:", e)
-                flash("Erreur lors de l'envoi vers Cloudinary.", "error")
+                print("Erreur Supabase:", e)
+                flash("Erreur serveur interne.", "error")
         else:
-            flash("Seuls les fichiers PDF sont autorisés.", "error")
+            flash("Seuls les fichiers PDF sont acceptés.", "error")
 
     return render_template("admin_repondre.html", demande=demande)
 
