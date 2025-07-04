@@ -440,45 +440,15 @@ def repondre(id):
     demande = ProgrammeDemande.query.get_or_404(id)
 
     if request.method == "POST":
-        fichier = request.files.get("pdf")
-        if fichier and fichier.filename.endswith(".pdf"):
-            try:
-                nom_client = demande.user.nom.replace(" ", "_").lower()
-                type_prog = demande.type.replace(" ", "_").lower()
-                filename = secure_filename(f"{type_prog}_{nom_client}_{demande.id}.pdf")
+        lien_drive = request.form.get("lien_drive")
 
-                supabase_url = os.getenv("SUPABASE_URL")
-                supabase_key = os.getenv("SUPABASE_KEY")
-                bucket = os.getenv("SUPABASE_BUCKET")
-
-                upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{filename}"
-                headers = {
-                    "apikey": supabase_key,
-                    "Authorization": f"Bearer {supabase_key}",
-                    "Content-Type": "application/pdf",
-                }
-
-                response = requests.put(
-                    upload_url, data=fichier.read(), headers=headers
-                )
-
-                if response.status_code == 200:
-                    public_url = (
-                        f"{supabase_url}/storage/v1/object/public/{bucket}/{filename}"
-                    )
-                    demande.fichier = public_url
-                    db.session.commit()
-                    flash("Programme envoyé avec succès.", "success")
-                    return redirect(url_for("admin"))
-                else:
-                    print("📛 ERREUR SUPABASE :", response.status_code, response.text)
-                    flash(f"Erreur Supabase : {response.status_code}", "error")
-
-            except Exception as e:
-                print("Erreur Supabase:", e)
-                flash("Erreur serveur interne.", "error")
+        if lien_drive and lien_drive.startswith("https://"):
+            demande.fichier = lien_drive
+            db.session.commit()
+            flash("Lien Google Drive enregistré avec succès.", "success")
+            return redirect(url_for("admin"))
         else:
-            flash("Seuls les fichiers PDF sont acceptés.", "error")
+            flash("Lien invalide ou manquant.", "error")
 
     return render_template("admin_repondre.html", demande=demande)
 

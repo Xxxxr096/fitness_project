@@ -26,12 +26,13 @@
         <p><strong>Type :</strong> {{ demande.type }}</p>
         <p><strong>Date :</strong> {{ demande.date.strftime('%d/%m/%Y') }}</p>
 
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <label for="pdf">Joindre un fichier PDF :</label>
-            <input type="file" name="pdf" accept="application/pdf" required>
-            <button type="submit" class="btn-contact">📤 Envoyer le programme</button>
+            <label for="lien_drive">Colle ici le lien de téléchargement Google Drive :</label>
+            <input type="url" name="lien_drive" required placeholder="https://drive.google.com/...">
+            <button type="submit" class="btn-contact">📤 Envoyer le lien</button>
         </form>
+        
 
         <br>
         <a href="/admin" class="btn-small">⬅ Retour</a>
