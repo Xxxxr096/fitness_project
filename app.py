@@ -253,8 +253,13 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and bycrypt.check_password_hash(user.password, password):
+            if not user.confirmed:
+                flash(
+                    "Tu dois confirmer ton adresse e-mail avant de te connecter.",
+                    "warning",
+                )
+                return redirect(url_for("login"))
             login_user(user)
-            # 👇 Rediriger vers admin s'il est admin
             if user.is_admin:
                 return redirect(url_for("admin"))
             return redirect(url_for("dashboard"))
