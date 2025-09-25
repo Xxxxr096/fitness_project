@@ -25,6 +25,8 @@ from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import generate_csrf
 import cloudinary
 import cloudinary.uploader
+from redis import Redis
+from flask_limiter import Limiter
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -62,7 +64,18 @@ UPLOAD_FOLDER = os.path.join(basedir, "static/uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
+redis_url = os.getenv("REDIS_URL")
 
+# Test de connexion (affiché dans les logs Render)
+try:
+    r = Redis.from_url(redis_url, decode_responses=True)
+    r.ping()
+    print("✅ Connecté à Redis")
+except Exception as e:
+    print("❌ Erreur Redis:", e)
+
+# Configure Flask-Limiter pour utiliser Redis
+limiter = Limiter(get_remote_address, storage_uri=redis_url, app=app)
 ALLOWED_EXTENSIONS = {"pdf"}
 
 
