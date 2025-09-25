@@ -8,6 +8,7 @@ from flask_login import (
     login_required,
     current_user,
 )
+import requests
 from flask_bcrypt import Bcrypt
 import smtplib
 from email.mime.text import MIMEText
@@ -23,10 +24,7 @@ from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import generate_csrf
-import cloudinary
-import cloudinary.uploader
-from redis import Redis
-from flask_limiter import Limiter
+
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -34,11 +32,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-)
 
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -271,8 +264,13 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and bycrypt.check_password_hash(user.password, password):
+            if not user.confirmed:
+                flash(
+                    "Tu dois confirmer ton adresse e-mail avant de te connecter.",
+                    "warning",
+                )
+                return redirect(url_for("login"))
             login_user(user)
-            # 👇 Rediriger vers admin s'il est admin
             if user.is_admin:
                 return redirect(url_for("admin"))
             return redirect(url_for("dashboard"))
@@ -328,9 +326,6 @@ def programmes():
     return render_template("programmes.html", demandes=demandes)
 
 
-from flask import send_file, Response, redirect
-
-
 @app.route("/telecharger-programme/<int:demande_id>")
 @login_required
 def telecharger_programme(demande_id):
@@ -340,18 +335,10 @@ def telecharger_programme(demande_id):
         abort(403)
 
     if not demande.fichier:
-        flash("Aucun fichier disponible pour cette demande.", "error")
-        return redirect(url_for("programmes"))
+        flash("Aucun fichier disponible.", "error")
+        return redirect(url_for("dashboard"))
 
-    # Construction d’un nom de fichier propre
-    nom_client = current_user.nom.replace(" ", "_").lower()
-    programme_type = demande.type.replace(" ", "_").lower()
-    nom_fichier = f"{programme_type}_{nom_client}_{demande.id}.pdf"
-
-    # Redirection vers l’URL Cloudinary avec nom forcé
-    url_pdf = f"{demande.fichier}&response-content-disposition=attachment;filename={nom_fichier}"
-
-    return redirect(url_pdf)
+    return redirect(demande.fichier)
 
 
 # ----------- ADMIN ------------ #
@@ -469,46 +456,15 @@ def repondre(id):
     demande = ProgrammeDemande.query.get_or_404(id)
 
     if request.method == "POST":
-        fichier = request.files.get("pdf")
-        if fichier and fichier.filename.endswith(".pdf"):
-            try:
-                # Nettoyage du nom de fichier
-                nom_client = demande.user.nom.replace(" ", "_").lower()
-                programme_type = demande.type.replace(" ", "_").lower()
-                filename = secure_filename(
-                    f"{programme_type}_{nom_client}{demande.id}.pdf"
-                )
+        lien_drive = request.form.get("lien_drive")
 
-                # ✅ Important : on garde l’extension .pdf dans le public_id
-                public_id = filename
-
-                # Upload vers Cloudinary
-                result = cloudinary.uploader.upload(
-                    fichier,
-                    resource_type="raw",  # ✅ obligatoire pour les PDF
-                    folder="grindzone_programmes",
-                    use_filename=True,
-                    public_id=public_id,
-                    unique_filename=False,
-                    overwrite=True,
-                )
-
-                # ✅ Force le téléchargement via fl_attachment
-                download_url = result["secure_url"].replace(
-                    "/upload/", "/upload/fl_attachment/"
-                )
-
-                # Enregistrer l’URL dans la base
-                demande.fichier = download_url
-                db.session.commit()
-                flash("Programme envoyé avec succès.", "success")
-                return redirect(url_for("admin"))
-
-            except Exception as e:
-                print("Cloudinary error:", e)
-                flash("Erreur lors de l'envoi vers Cloudinary.", "error")
+        if lien_drive and lien_drive.startswith("https://"):
+            demande.fichier = lien_drive
+            db.session.commit()
+            flash("Lien Google Drive enregistré avec succès.", "success")
+            return redirect(url_for("admin"))
         else:
-            flash("Seuls les fichiers PDF sont autorisés.", "error")
+            flash("Lien invalide ou manquant.", "error")
 
     return render_template("admin_repondre.html", demande=demande)
 
