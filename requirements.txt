@@ -12,3 +12,4 @@ itsdangerous==2.2.0
 cloudinary==1.37.0
 redis
 hiredis
+requests
